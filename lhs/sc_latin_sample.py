@@ -99,11 +99,11 @@ sim_specs = {'sim_f': opal_sample,         # sim_f, imported above
                       'basefile_name': 'sc_inj_C1',
                       'input_files_path':TOP_DIR+files,
                       'distgen_file':TOP_DIR+files+'tgauss.yaml',
-                      'zstop': 15.0,
+                      'zstop': opt_config.zstop,
                       'penalty_scale':opt_config.penalty,
                       'xscales':xscale,
                       'objective_scales':objscale,
-                      'cores': 4,
+                      'cores': opt_config.cores,
                       'sim_particles': opt_config.simpart,
                       'sim_kill_minutes': 10,
 			
