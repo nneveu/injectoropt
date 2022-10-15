@@ -22,7 +22,6 @@ import numpy as np
 
 # Import libEnsemble items for this test
 from libensemble.libE import libE
-#from libensemble.sim_funcs.one_d_func import one_d_example as sim_f
 from libensemble.gen_funcs.sampling import latin_hypercube_sample as gen_f
 from libensemble.tools import parse_args, save_libE_output, add_unique_random_streams
 from libensemble.message_numbers import WORKER_DONE, WORKER_KILL, TASK_FAILED, WORKER_KILL_ON_TIMEOUT
@@ -32,29 +31,26 @@ from libensemble import logger
 logger.set_level('DEBUG')
 nworkers, is_master, libE_specs, _ = parse_args()
 
-libE_specs = {"nworkers": nworkers} #, "comms": "local"}
+TOP_DIR = '/gpfs/slac/staas/fs1/g/accelerator_modeling/nneveu/injectoropt/sc_files/'
+#Setting up the simulation enviornment
+FMAP_DIR = TOP_DIR + 'fieldmaps'
+
+libE_specs = {"nworkers": nworkers, "comms": "local"}
 libE_specs['save_every_k_gens'] = 100 
 libE_specs['save_every_k_sims'] = 1
-libE_specs['ensemble_dir_path'] = 'ensemble'
+libE_specs['sim_dirs_make'] = True
+libE_specs['sim_dir_symlink_files'] = [ f for f in glob.glob(FMAP_DIR+'/*.txt')]
+
 # Create executor and register sim to it
-exctr = MPIExecutor()  # Use auto_resources=False to oversubscribe
+exctr = MPIExecutor() 
 
 #User sim_f
 from libeopal import opal_sample
 import opt_config
 
-TOP_DIR = '/gpfs/slac/staas/fs1/g/accelerator_modeling/nneveu/injectoropt/sc_files/'
-#Setting up the simulation enviornment
-FMAP_DIR = TOP_DIR + 'fieldmaps'
-
 # Register simulation executable with executor
 sim_app = '/gpfs/slac/staas/fs1/g/accelerator_modeling/nneveu/software/OPAL/opal_mpich/bin/opal'
 exctr.register_app(full_path=sim_app, calc_type='sim')
-
-libE_specs['comms'] = 'local'
-libE_specs['sim_dir_symlink_files'] = [ f for f in glob.glob(FMAP_DIR+'/*.txt')]
-libE_specs['sim_dirs_make'] = True
-
 
 
 STAT_NAMES = ['t', 's','numParticles','charge','energy','rms_x', 'rms_y', 'rms_s', \
