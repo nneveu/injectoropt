@@ -31,6 +31,8 @@ from libensemble.executors.mpi_executor import MPIExecutor
 from libensemble import logger
 logger.set_level('DEBUG')
 nworkers, is_master, libE_specs, _ = parse_args()
+
+libE_specs = {"nworkers": nworkers} #, "comms": "local"}
 libE_specs['save_every_k_gens'] = 100 
 libE_specs['save_every_k_sims'] = 1
 libE_specs['ensemble_dir_path'] = 'ensemble'
@@ -41,8 +43,7 @@ exctr = MPIExecutor()  # Use auto_resources=False to oversubscribe
 from libeopal import opal_sample
 import opt_config
 
-TOP_DIR = '/gpfs/slac/staas/fs1/g/accelerator_modeling/nneveu/emittance_minimization/code/slac/'
-files   = 'paper_test/'
+TOP_DIR = '/gpfs/slac/staas/fs1/g/accelerator_modeling/nneveu/injectoropt/sc_files/'
 #Setting up the simulation enviornment
 FMAP_DIR = TOP_DIR + 'fieldmaps'
 
@@ -97,8 +98,8 @@ sim_specs = {'sim_f': opal_sample,         # sim_f, imported above
              'out': [('f', float, num_objs)] +  [(key,float) for key in key_dict['data_keys']] + [(key+'_long',float, 2500) for key in key_dict['data_keys']],
              'user': {'key_dict': key_dict,
                       'basefile_name': 'sc_inj_C1',
-                      'input_files_path':TOP_DIR+files,
-                      'distgen_file':TOP_DIR+files+'tgauss.yaml',
+                      'input_files_path':TOP_DIR,
+                      'distgen_file':TOP_DIR+'tgauss.yaml',
                       'zstop': opt_config.zstop,
                       'penalty_scale':opt_config.penalty,
                       'xscales':xscale,
@@ -121,7 +122,7 @@ gen_specs = {'gen_f': gen_f,
 
 persis_info = add_unique_random_streams({}, nworkers + 1)
 
-exit_criteria = {'sim_max': 1000}
+exit_criteria = {'sim_max': 10}
 
 # Perform the run
 H, persis_info, flag = libE(sim_specs, gen_specs, exit_criteria, persis_info,

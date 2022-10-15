@@ -264,7 +264,8 @@ class LibeOpal(object):
         # Starting simulation with xvals
         exctr = Executor.executor
         task  = exctr.submit(calc_type='sim', num_procs=self.cores, app_args= self.opal_input_file, #machinefile='machinefile',
-                             stdout='out.txt', stderr='err.txt', extra_args='--exact -u --mem-per-cpu=4G') 
+                             stdout='out.txt', stderr='err.txt')
+        #, extra_args='--exact -u --mem-per-cpu=4G') 
         #'--exclusive') #"--exact -u -bind-to core")#, dry_run=True) 
        
         # Waiting for task to finish
