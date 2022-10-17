@@ -18,12 +18,11 @@ persistent generator.
 
 import sys, os, glob
 import numpy as np
-sys.path.append('/gpfs/slac/staas/fs1/g/accelerator_modeling/nneveu/emittance_minimization/code/slac/paper_test')
+sys.path.append('/gpfs/slac/staas/fs1/g/accelerator_modeling/nneveu/injectoropt')
 
 # Import libEnsemble items for this test
 from libensemble.libE import libE
 from math import gamma, pi, sqrt
-#from libensemble.sim_funcs.six_hump_camel import six_hump_camel as sim_f
 from libensemble.utils.timer import Timer
 import libensemble.gen_funcs
 
@@ -32,7 +31,6 @@ from libensemble.gen_funcs.persistent_aposmm import aposmm as gen_f
 
 from libensemble.alloc_funcs.persistent_aposmm_alloc import persistent_aposmm_alloc as alloc_f
 from libensemble.tools import parse_args, save_libE_output, add_unique_random_streams
-#from libensemble.tests.regression_tests.support import six_hump_camel_minima as minima
 from libensemble.message_numbers import WORKER_DONE, WORKER_KILL, TASK_FAILED, WORKER_KILL_ON_TIMEOUT
 from libensemble.executors.mpi_executor import MPIExecutor
 exctr = MPIExecutor()
@@ -45,7 +43,6 @@ from libeopal import opal_aposmm as sim_f
 #import settings from opt_config file in paper_test directory
 import opt_config
 # Create executor and register sim to it
-print(opt_config.sim_app)
 exctr.register_app(full_path=opt_config.sim_app, calc_type='sim')
 
 nworkers, is_manager, libE_specs, _ = parse_args()
@@ -91,7 +88,7 @@ num_objs = len(opt_config.objscale)
 # Load previous sample
 sample_size = 1000
 f           = np.zeros((sample_size, num_objs))
-sample      = np.load('/gpfs/slac/staas/fs1/g/accelerator_modeling/nneveu/emittance_minimization/code/slac/paper_test/sample/latin_sample_run5.npy')
+sample      = np.load('/gpfs/slac/staas/fs1/g/accelerator_modeling/nneveu/injectoropt/lhs/lhs_1k_sample.npy')
 
 # Initialize H0
 H0_dtype = [
@@ -168,12 +165,10 @@ sim_specs = {
 }# end sim specs
 
 alloc_specs = {'alloc_f': alloc_f}
-
 three_fs    = w*fvals_scaled
 H0['f']     = np.sum(three_fs,axis=1) 
 print('fvals_scaled', fvals_scaled[:3])
 print('fvals*w', H0['f'][:3])
-
 
 
 # Perform the run
