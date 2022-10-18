@@ -19,6 +19,7 @@ from mpi4py import MPI
 
 import os, sys, glob
 import numpy as np
+sys.path.append('/gpfs/slac/staas/fs1/g/accelerator_modeling/nneveu/injectoropt/')
 
 # Import libEnsemble items for this test
 from libensemble.libE import libE
@@ -59,28 +60,6 @@ STAT_NAMES = ['t', 's','numParticles','charge','energy','rms_x', 'rms_y', 'rms_s
               #'max_x', 'max_y', 'max_s', 'xpx', 'ypy', 'zpz', 'Dx', 'DDx', 'Dy', 'DDy', \
               #'Bx_ref', 'By_ref', 'Bz_ref', 'Ex_ref', 'Ey_ref', 'Ez_ref', 'dE', 'dt', 'partsOutside']
 
-objscale =  np.array([
-        ('emit_x',0.3e-6,6e-6),
-        ('rms_s',0.5e-3,4e-3),
-        ('dE', 0.0, 1.0),
-        ],dtype=[('name', 'U10'), ('lb', 'f4'), ('ub', 'f4')])
-
-xscale   = np.array([('PHBUN', 1.0), ('GBUN',0.1), \
-                     ('SF1', 1e-3), ('SF2', 1e-3), \
-                    ('PHCM1', 1.0), ('GCM1', 1.0), \
-                    ('PHCM2', 1.0), ('GCM2', 1.0),\
-                    ('PHCM3', 1.0), ('GCM3', 1.0), \
-                    ('PHCM4', 1.0), ('GCM4', 1.0),\
-                   ],dtype=[('name', 'U10'), ('scale', 'f4')])
-
-xbounds  = np.array([('PHBUN', -100.0, -10.0), ('GBUN', 10.0, 18.0), \
-                    ('SF1', 20.0, 70.0), ('SF2', 20.0, 70.0), \
-                    ('PHCM1', -40.0, 40.0), ('GCM1', 0.0, 32.0), \
-                    ('PHCM2', -40.0, 40.0), ('GCM2', 0.0, 32.0), \
-                    ('PHCM3', -40.0, 40.0), ('GCM3', 0.0, 32.0), \
-                    ('PHCM4', -40.0, 40.0), ('GCM4', 0.0, 32.0), \
-                   ],dtype=[('name', 'U10'), ('lb', 'f4'), ('ub', 'f4')])
-
 # Keys related to data in OPAL sim and objectives
 key_dict = {'data_keys': STAT_NAMES,
             'dvar_keys': list(xbounds['name'][:]),
@@ -98,11 +77,11 @@ sim_specs = {'sim_f': opal_sample,         # sim_f, imported above
                       'distgen_file':TOP_DIR+'tgauss.yaml',
                       'zstop': opt_config.zstop,
                       'penalty_scale':opt_config.penalty,
-                      'xscales':xscale,
-                      'objective_scales':objscale,
+                      'xscales':opt_config.xscale,
+                      'objective_scales':opt_config.objscale,
                       'cores': opt_config.cores,
                       'sim_particles': opt_config.simpart,
-                      'sim_kill_minutes': 10,
+                      'sim_kill_minutes': opt_config.simkill,
 			
                       }
              }

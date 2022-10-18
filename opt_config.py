@@ -27,8 +27,7 @@ objscale =  np.array([
         ],dtype=[('name', 'U10'), ('lb', 'f4'), ('ub', 'f4')])
 
 
-xscale   = np.array([
-                    ('RADIUS', 1e-2), ('FWHM',1.0), 
+xscale   = np.array([('RADIUS', 1e-2), ('FWHM',1.0), \
                     ('PHBUN', 1.0), ('GBUN',0.1), \
                     ('SF1', 1e-3), ('SF2', 1e-3), \
                     ('PHCM1', 1.0), ('GCM1', 1.0), \
@@ -37,7 +36,7 @@ xscale   = np.array([
                     ('PHCM4', 1.0), ('GCM4', 1.0),\
                    ],dtype=[('name', 'U10'), ('scale', 'f4')])
 
-xbounds  = np.array([('RADIUS', 30, 60), ('FWHM', 5.0, 20.0)
+xbounds  = np.array([('RADIUS', 30, 60), ('FWHM', 5.0, 20.0), \
                     ('PHBUN', -100.0, -10.0), ('GBUN', 10.0, 18.0), \
                     ('SF1', 20.0, 70.0), ('SF2', 20.0, 70.0), \
                     ('PHCM1', -40.0, 40.0), ('GCM1', 1.0e-5, 32.0), \
