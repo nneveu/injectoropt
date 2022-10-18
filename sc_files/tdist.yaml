@@ -1,0 +1,23 @@
+n_particle: 50000
+random_type: hammersley
+
+start:
+  MTE:
+    units: meV
+    value: 250
+  type: cathode
+
+t_dist:
+  file: tdist_file.dat
+  type: file1d
+  units: ps
+
+total_charge:
+  units: pC
+  value: 100
+
+r_dist:
+  type: radial_uniform
+  max_r:
+    units: mm
+    value: 0.5
