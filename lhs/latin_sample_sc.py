@@ -62,10 +62,10 @@ STAT_NAMES = ['t', 's','numParticles','charge','energy','rms_x', 'rms_y', 'rms_s
 
 # Keys related to data in OPAL sim and objectives
 key_dict = {'data_keys': STAT_NAMES,
-            'dvar_keys': list(xbounds['name'][:]),
-            'objective_keys':objscale['name']}
+            'dvar_keys': list(opt_config.xbounds['name'][:]),
+            'objective_keys':opt_config.objscale['name']}
 
-num_objs = len(objscale['name'])
+num_objs = len(opt_config.objscale['name'])
 # State the sim_f, its arguments, output, and parameters (and their sizes)
 sim_specs = {'sim_f': opal_sample,         # sim_f, imported above
              'in': ['x'],                 # Name of input for sim_f
@@ -88,10 +88,10 @@ sim_specs = {'sim_f': opal_sample,         # sim_f, imported above
 #sim_specs = {'sim_f': sim_f, 'in': ['x'], 'out': [('f', float)]}
 
 gen_specs = {'gen_f': gen_f,
-             'out': [('x', float, len(xbounds['name']))],
+             'out': [('x', float, len(opt_config.xbounds['name']))],
              'user': {'gen_batch_size': 10,
-                      'lb': xbounds['lb'],
-                      'ub': xbounds['ub'],
+                      'lb': opt_config.xbounds['lb'],
+                      'ub': opt_config.xbounds['ub'],
                       }
              }
 
