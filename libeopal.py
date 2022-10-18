@@ -111,6 +111,39 @@ class LibeOpal(object):
             # Load scales
             rindex  = np.where(self.xscale['name']=='RADIUS') 
             rscale  = self.xscale['scale'][rindex][0]
+            # Scale inputs for simulation
+            radius  = x[rindex][0]*rscale 
+          
+        if 'FWHM' in self.xscale['name']:
+            # Load scales
+            tindex  = np.where(self.xscale['name']=='FWHM')
+            tscale  = self.xscale['scale'][tindex][0]
+            sigmat  = (x[tindex][0]*tscale)/2.355 # converting FWHM to sigma
+        
+        #Sett radius and fwhm
+        dist = Generator(input=self.distgen_file)#, verbose=True)
+        #dist.input['start']['MTE']['value'] = MTE # Should be in YAML
+        dist.input['r_dist']['max_r']['value'] = radius #mm based on scaling in call script 
+        dist.input['t_dist']['sigma_t']['value'] = sigmat
+        #Generate and save distribution file
+        dist.run()
+        particles = dist.particles
+        particles.write_opal('opal_emitted.txt', dist_type= 'emitted')
+        self.dist = dist
+        return dist
+
+
+    def old_make_gaussian_dist(self,x):
+        """Run distgen to make particle distribution"""
+        if len(self.xscale)==1:
+            # No scales, use raw vals for everything
+            rscale = 1
+            tscale = 1
+
+        if 'RADIUS' in self.xscale['name']:
+            # Load scales
+            rindex  = np.where(self.xscale['name']=='RADIUS') 
+            rscale  = self.xscale['scale'][rindex][0]
            
         if 'FWHM' in self.xscale['name']:
             # Load scales
